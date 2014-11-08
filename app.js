@@ -20,7 +20,19 @@ app.get('/', function (req, res) {
   name:'yangyu'
    });
 });
+app.use(function(err, req, res, next){
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+// var bodyParser = require('body-parser');
+// var methodOverride = require('method-override');
 
+// app.use(bodyParser());
+// app.use(methodOverride());
+// app.use(app.router);
+app.use(function(err, req, res, next){
+  // logic
+});
 /**
  * [路由]
  * @param  {[type]} req
