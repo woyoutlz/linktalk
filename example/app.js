@@ -10,6 +10,9 @@ var users = require('./routes/users');
 
 var app = express();
 
+
+
+// var Kitten = mongoose.model('Kitten', kittySchema);
 // view engine setup
 // app.set('views', path.join(__dirname, 'views'));
 // app.set('view engine', 'jade');
@@ -33,15 +36,19 @@ app.all('*', function(req, res, next) {
     next();
 });
 */
-
+//app.use 是每一个请求都会执行的中间件
+// app.use(function(req,res,next){
+//     console.log("good");
+//     next();
+// })
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+// app.use('/users', users);
 
 app.use('/bower', express.static(__dirname + '/bower_components'));
 
