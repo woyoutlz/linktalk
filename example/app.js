@@ -4,12 +4,14 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var exsession = require('express-session');
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var apisf = require('./routes/apis');
 var app = express();
 
+var passport = require('passport')
+    , LocalStrategy = require('passport-local').Strategy;
 
 
 // var Kitten = mongoose.model('Kitten', kittySchema);
@@ -46,8 +48,61 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(exsession({secret: 'link.me', cookie: { maxAge: 60000 }}));
+app.use(passport.initialize());
+app.use(passport.session());
 
+//-----------
+passport.use('local', new LocalStrategy(
+    function (username, password, done) {
+
+        var user = {
+            id: '1',
+            username: 'yangyu',
+            password: '111111'
+        }; // 可以配置通过数据库方式读取登陆账号
+
+        if (username !== user.username) {
+            return done(null, false, { message: 'Incorrect username.' });
+        }
+        if (password !== user.password) {
+            return done(null, false, { message: 'Incorrect password.' });
+        }
+        console.log("授权ok");
+        return done(null, user);
+    }
+));
+
+passport.serializeUser(function (user, done) {//保存user对象
+    done(null, user);//可以通过数据库方式操作
+});
+
+passport.deserializeUser(function (user, done) {//删除user对象
+    done(null, user);//可以通过数据库方式操作
+});
+
+
+//--------------
 app.use('/', routes);
+app.post('/login', passport.authenticate('local'),function(req,res){
+    res.send("login susees");
+});
+function islogin(req,res,next){
+     if (req.isAuthenticated())
+        return next();
+
+    res.redirect('/');
+}
+app.get('/user',islogin,function(req,res){
+
+    res.send("hellp,"+req.user.username);
+});
+app.get('/logout',function(req,res){
+     req.logout();
+    res.redirect('/');
+});
+//------------------------------------
+app.use('/api', apisf(passport));
 // app.use('/users', users);
 
 app.use('/bower', express.static(__dirname + '/bower_components'));
