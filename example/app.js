@@ -20,6 +20,9 @@ var passport = require('passport')
 // app.set('view engine', 'jade');
 swig = require('swig');
 // This is where all the magic happens!
+// 
+app.locals.title = "hello yany";
+
 app.engine('html', swig.renderFile);
 
 app.set('view engine', 'html');
@@ -137,6 +140,10 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
+var help = require('./controllers/helperController');
+console.log(help.hehe);
+help.hehe = "yes";
+process.on("exit",function(){
+    console.log("我马上要关掉自己了:)");
+});
 module.exports = app;

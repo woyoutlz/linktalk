@@ -3,7 +3,7 @@ module.exports = function(passport){
 	var router = express.Router();
 	var modelC = require('../controllers/modelController');
 	/* GET home page. */
-
+	var help = require('../controllers/helperController');
 	router.use(function(req,res,next){
 		res.header("Access-Control-Allow-Origin", "http://127.0.0.1:8000");
 		res.header("Access-Control-Allow-Headers","Origin, X-Requested-With, Content-Type, Accept");
@@ -22,7 +22,9 @@ router.post('/login',function(req,res,next){
 		if (!user) { return res.send(info); }
 		req.logIn(user, function(err) {
 			if (err) { return next(err); }
+			console.log(help.hehe);
 			return res.send({message:"success"});
+
 		});
 	})(req, res, next);
 });

@@ -16,9 +16,9 @@ gulp.task('webserver', function() {
     .pipe(webserver({
       host:"0.0.0.0",
       livereload: true,
-      directoryListing: true
+      directoryListing: false
       // open: true,
-       // fallback: 'index.html'
+        // fallback: 'index.html'
     }));
 });
 // 检查脚本
